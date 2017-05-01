@@ -14,7 +14,7 @@ LANG=C
 # location
 KERNELDIR=$(readlink -f .);
 
-KERNEL_CONFIG_FILE=dorimanx_defconfig;
+KERNEL_CONFIG_FILE=oneplus3_defconfig;
 
 echo "Initialising................."
 if [ -e "$KERNELDIR"/READY-KERNEL/Image.gz-dtb ]; then
@@ -72,7 +72,7 @@ BUILD_NOW()
 	fi;
 
 	# build kernel and modules
-	time make ARCH=arm64 CROSS_COMPILE=android-toolchain-arm64/bin/arm-eabi- -j $NR_CPUS
+	time make ARCH=arm64 CROSS_COMPILE=/home/ivankolev/du/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-6.x/bin/aarch64-linux-android- -j $NR_CPUS
 
 	cp "$KERNELDIR"/.config "$KERNELDIR"/arch/arm64/configs/"$KERNEL_CONFIG_FILE";
 
@@ -92,8 +92,8 @@ BUILD_NOW()
 		chmod 755 READY-KERNEL/modules/*.ko
 
 		# strip not needed debugs from modules.
-		android-toolchain-arm64/bin/arm-eabi-strip --strip-unneeded READY-KERNEL/modules/*
-		android-toolchain-arm64/bin/arm-eabi-strip --strip-debug READY-KERNEL/modules/*
+		/home/ivankolev/du/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-6.x/bin/aarch64-linux-android-strip --strip-unneeded READY-KERNEL/modules/*
+		/home/ivankolev/du/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-6.x/bin/aarch64-linux-android-strip --strip-debug READY-KERNEL/modules/*
 
 		if [ "$PYTHON_WAS_3" -eq "1" ]; then
 			rm /usr/bin/python
@@ -131,7 +131,7 @@ BUILD_NOW()
 		# create the flashable zip file from the contents of the installer directory
 		cd READY-KERNEL/installer/;
 		echo "Creating flashable zip..........."
-		zip -r Kernel-"${GETVER}"-OP3T-"$(date +"[%H-%M]-[%d-%m]-PWR-CORE")".zip * >/dev/null
+		zip -r Kernel-"${GETVER}"-OP3-"$(date +"[%H-%M]-[%d-%m]-PWR-CORE")".zip * >/dev/null
 		mv *.zip ../
 		cd $KERNELDIR;
 		echo "All Done";
