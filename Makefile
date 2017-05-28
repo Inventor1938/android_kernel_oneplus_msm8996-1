@@ -250,7 +250,7 @@ SUBARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
 # Default value for CROSS_COMPILE is not to prefix executables
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
 ARCH		?= arm64
-CROSS_COMPILE	?= $(CCACHE) /home/ivankolev/du/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-6.x/bin/aarch64-linux-android-
+CROSS_COMPILE	?= $(CCACHE) /home/ivankolev/aosp-caf/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-6.x/bin/aarch64-linux-android-
 
 # Architecture as present in compile.h
 UTS_MACHINE 	:= $(ARCH)
@@ -362,7 +362,7 @@ KCFLAG		= -std=gnu11
 
 # Make variables (CC, etc...)
 AS		= $(CROSS_COMPILE)as
-LD		= $(CROSS_COMPILE)ld
+LD		= $(CROSS_COMPILE)ld.bfd
 CC		= ccache $(CROSS_COMPILE)gcc $(GCC_OPTS) -w
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
