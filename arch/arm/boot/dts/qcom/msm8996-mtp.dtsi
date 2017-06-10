@@ -68,7 +68,7 @@
 	qcom,nonremovable;
 	qcom,bus-speed-mode = "HS400_1p8v", "HS200_1p8v", "DDR_1p8v";
 
-	status = "disabled";
+	status = "ok";
 };
 
 &sdhc_2 {
@@ -89,7 +89,7 @@
 
 	cd-gpios = <&tlmm 95 0x1>;
 
-	status = "disabled";
+	status = "ok";
 };
 #endif
 
@@ -338,6 +338,9 @@
 };
 
 #include "msm8996-mdss-panels.dtsi"
+#include "dsi-panel-samsung_s6e3fa3_1080p_cmd.dtsi"
+#include "dsi-panel-samsung_s6e3fa5_1080p_cmd.dtsi"
+#include "dsi-panel-samsung_s6e3fa5r9s_1080p_cmd.dtsi"
 
 &mdss_mdp {
 	qcom,mdss-pref-prim-intf = "dsi";
@@ -356,6 +359,7 @@
 	qcom,platform-reset-gpio = <&tlmm 8 0>;
 };
 
+#if 0
 &mdss_dsi1 {
 	qcom,dsi-pref-prim-pan = <&dsi_dual_sharp_video>;
 	pinctrl-names = "mdss_default", "mdss_sleep";
@@ -365,12 +369,14 @@
 	qcom,platform-reset-gpio = <&tlmm 8 0>;
 	qcom,platform-bklight-en-gpio = <&pm8994_gpios 14 0>;
 };
+#endif
 
 &labibb {
 	status = "ok";
 	qpnp,qpnp-labibb-mode = "lcd";
 };
 
+#if 0
 &dsi_dual_sharp_video {
 	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_wled";
 	qcom,mdss-dsi-bl-min-level = <1>;
@@ -484,6 +490,7 @@
 	qcom,mdss-dsi-bl-max-level = <4095>;
 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
 };
+#endif
 
 /{
 	mtp_batterydata: qcom,battery-data {
@@ -541,6 +548,7 @@
 
 &pmi8994_fg {
 	qcom,battery-data = <&mtp_batterydata>;
+	qcom,ext-sense-type;
 };
 
 &usb_otg_switch {
@@ -708,23 +716,13 @@
 		fpc,gpio_1V8_EN = <&tlmm 14 0x00>;
 	};
 
-	oneplus_rf_cable {
-		compatible = "oneplus,rf_cable";
-		interrupt-parent = <&tlmm>;
-		rf,cable-gpio    = <&tlmm 131 0>;
-
-		#pinctrl-names = "pmx_tri_state_key_active", "pmx_tri_state_key_suspend";
-		#pinctrl-0 = <&tri_state_key_active>;
-		#pinctrl-1 = <&tri_state_key_suspend>;
-	};
-
-	i2c@7577000{
+	i2c@7577000 {
 		status = "ok";
 
 		nxp_tfa9890: tfa9890@36 {
 			compatible = "nxp,tfa9890";
 			reg = <0x36>;
-			reset_gpio= <&tlmm 16 0>;
+			reset_gpio = <&tlmm 16 0>;
 			status = "okay";
 		};
 	};
@@ -961,6 +959,35 @@
 		reg = <0x51>;
 	};
 };
+
+#if 0
+&i2c_7 {
+	silabs4705@11 { /* SiLabs FM chip, slave id 0x11*/
+		status = "ok";
+		compatible = "silabs,si4705";
+		reg = <0x11>;
+		vdd-supply = <&pm8994_s4>;
+		silabs,vdd-supply-voltage = <1800000 1800000>;
+		va-supply = <&rome_vreg>;
+		silabs,va-supply-voltage = <3300000 3300000>;
+		pinctrl-names = "pmx_fm_active","pmx_fm_suspend";
+		pinctrl-0 = <&fm_int_active &fm_status_int_active &fm_rst_active>;
+		pinctrl-1 = <&fm_int_suspend &fm_status_int_suspend &fm_rst_suspend>;
+		silabs,reset-gpio = <&tlmm 39 0>;
+		silabs,int-gpio = <&tlmm 38 0>;
+		silabs,status-gpio = <&tlmm 78 0>;
+		#address-cells = <0>;
+		interrupts = <0 1>;
+		#interrupt-cells = <1>;
+		interrupt-map-mask = <0xffffffff>;
+		interrupt-map = <
+				  0 &tlmm 38 2
+				  1 &tlmm 78 1
+				>;
+		interrupt-names = "silabs_fm_int", "silabs_fm_status_int";
+	};
+};
+#endif
 
 &i2c_8 { /* BLSP2 QUP2 */
 	synaptics-rmi-ts@20 {
