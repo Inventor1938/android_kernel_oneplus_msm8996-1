@@ -15,8 +15,7 @@
 #include <linux/seq_file.h>
 #include <linux/debugfs.h>
 #include <linux/types.h>
-#include <linux/moduleparam.h>
-#include <linux/display_state.h>
+#include <linux/proc_fs.h>
 #include <trace/events/power.h>
 
 #include "power.h"
@@ -467,7 +466,7 @@ static bool wakeup_source_blocker(struct wakeup_source *ws)
 {
 	unsigned int wslen = 0;
 
-	if (!is_display_on() && ws && ws->active) {
+	if (ws && ws->active) {
 		wslen = strlen(ws->name);
 
 		if ((!enable_ipa_ws && !strncmp(ws->name, "IPA_WS", wslen)) ||
